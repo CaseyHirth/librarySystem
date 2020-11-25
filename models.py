@@ -21,6 +21,7 @@ class Member(UserMixin, db.Model):
     zip = db.Column(db.String(13))
 
     checkOuts = db.relationship('CheckOut', backref='borrower')
+    check_in = db.relationship('CheckIn', backref='borrower')
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -67,7 +68,8 @@ class Book(db.Model):
     genre = db.Column(db.String(50))
     branchLocation = db.Column(db.String(50))
 
-    borrower = db.relationship('Member', backref='borrowed_book')
+    check_out = db.relationship('CheckOut', backref='borrowed_book')
+    check_in = db.relationship('CheckIn', backref='borrowed_book')
 
 worksAt = db.Table('works_at',
     db.Column('employee_id', db.Integer, db.ForeignKey('employees.id')),
