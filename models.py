@@ -17,6 +17,8 @@ class Member(UserMixin, db.Model):
     city = db.Column(db.String(50))
     state = db.Column(db.String(50))
     zip = db.Column(db.String(13))
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    isAdmin = db.Column(db.Boolean, default=True)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -37,3 +39,6 @@ class Book(db.Model):
     author = db.Column(db.String(50))
     genre = db.Column(db.String(50))
     branchLocation = db.Column(db.String(50))
+
+
+    

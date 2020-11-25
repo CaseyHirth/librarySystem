@@ -9,7 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from models import Member, Book
 from forms import LoginForm, RegisterForm, BookSearchForm, BookAddForm
 from app import app, db
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_us
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 
 @app.route('/')
@@ -57,6 +57,33 @@ def addBook():
 
 
     return render_template('add_book.html', form=form)
+
+@app.route('/delete_book', methods=['GET','POST'])
+def deleteAbook():
+    form = BookAddForm()
+
+    if form.validate_on_submit():
+        newBook = Book(isbn=form.isbn.data, title=form.title.data, author=form.author.data, genre=form.genre.data, branchLocation=form.branchLocation.data)
+        db.session.add(deleteBook)
+        db.session.commit()
+
+
+    return render_template('delete_abook.html', form=form)
+
+
+@app.route('/checkoutbook', methods=['GET','POST'])
+def checkoutbook():
+    form = BookAddForm()
+
+    if form.validate_on_submit():
+        newBook = Book(isbn=form.isbn.data, title=form.title.data, author=form.author.data, genre=form.genre.data, branchLocation=form.branchLocation.data)
+        db.session.add(checkoutBook)
+        db.session.commit()
+
+
+    return render_template('checkoutBook.html', form=form)
+
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
