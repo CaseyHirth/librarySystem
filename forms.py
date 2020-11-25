@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, BooleanField, IntegerField, Sele
 from wtforms.validators import InputRequired, Email, Length  
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[InputRequired(), Length(min=4, max=15)])
+    email = StringField('Email', validators=[InputRequired(),Email(message='Invalid email')])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
     remember = BooleanField('Remember me')
 
@@ -17,7 +17,6 @@ class RegisterForm(FlaskForm):
     state = StringField('State', validators=[InputRequired(), Length(min=1, max=50)])
     zip = StringField('Zipcode', validators=[InputRequired(), Length(min=1, max=13)])
     email = StringField('Email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)]) 
-    username = StringField('Username', validators=[InputRequired(), Length(min=4, max=15)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
 
 class BookSearchForm(FlaskForm):

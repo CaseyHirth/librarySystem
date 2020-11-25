@@ -6,10 +6,10 @@ from wtforms import StringField, PasswordField, BooleanField, IntegerField, Sele
 from wtforms.validators import InputRequired, Email, Length
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import Member, Book
 from forms import LoginForm, RegisterForm, BookSearchForm, BookAddForm
 from app import app, db
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from models import Member, Book, User, Employees
 
 
 @app.route('/')
@@ -18,6 +18,7 @@ def index():
 
 @app.route('/book_search_results')
 def bookSearchResults():
+
     isbn = request.args.get('isbn')
     title = request.args.get('title')
     author = request.args.get('author')
@@ -91,10 +92,10 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        member = Member.query.filter_by(username=form.username.data).first()
-        if member:
-            if check_password_hash(member.password, form.password.data):
-                login_user(member, remember=form.remember.data)
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            if check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
                 return redirect(url_for('dashboard'))
             
         return '<h1>Invalid email or password </h1>'
@@ -108,10 +109,20 @@ def signup():
 
     if form.validate_on_submit():
         hashedPassword = generate_password_hash(form.password.data, method='sha256')
-        newMember = Member(username=form.username.data, email=form.email.data, password=hashedPassword, 
-                    firstName=form.firstName.data, lastName=form.lastName.data, gender=form.gender.data, age=form.age.data,
-                    street=form.street.data, city=form.city.data, state=form.state.data, zip=form.zip.data)
+        newUser = User(email=form.email.data, 
+                        password = hashedPassword, 
+                        role = 'member')
+        newMember = Member(email=form.email.data, 
+                    firstName=form.firstName.data, 
+                    lastName=form.lastName.data, 
+                    gender=form.gender.data, 
+                    age=form.age.data,
+                    street=form.street.data, 
+                    city=form.city.data, 
+                    state=form.state.data, 
+                    zip=form.zip.data)
         db.session.add(newMember)
+        db.session.add(newUser)
         db.session.commit()
 
         return '<h1>New user has been created!</h1>'
@@ -122,7 +133,12 @@ def signup():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html', name=current_user.firstName)
+    if current_user.role == 'member':
+        return '<h1>Must be an employee </h1>'
+    if current_user.role == 'employee':
+        employee = Employees.query.filter_by(email=current_user.email).first()
+
+        return render_template('dashboard.html', name=employee.firstName)
 
 @app.route('/logout')
 @login_required
