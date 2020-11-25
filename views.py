@@ -12,7 +12,6 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from models import Member, Book, User, Employees
 
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -59,6 +58,33 @@ def addBook():
 
 
     return render_template('add_book.html', form=form)
+
+@app.route('/delete_book', methods=['GET','POST'])
+def deleteAbook():
+    form = BookAddForm()
+
+    if form.validate_on_submit():
+        newBook = Book(isbn=form.isbn.data, title=form.title.data, author=form.author.data, genre=form.genre.data, branchLocation=form.branchLocation.data)
+        db.session.add(deleteBook)
+        db.session.commit()
+
+
+    return render_template('delete_abook.html', form=form)
+
+
+@app.route('/checkoutbook', methods=['GET','POST'])
+def checkoutbook():
+    form = BookAddForm()
+
+    if form.validate_on_submit():
+        newBook = Book(isbn=form.isbn.data, title=form.title.data, author=form.author.data, genre=form.genre.data, branchLocation=form.branchLocation.data)
+        db.session.add(checkoutBook)
+        db.session.commit()
+
+
+    return render_template('checkoutBook.html', form=form)
+
+
 
 
 @app.route('/login', methods=['GET', 'POST'])

@@ -27,7 +27,7 @@ class Member(db.Model):
     city = db.Column(db.String(50))
     state = db.Column(db.String(50))
     zip = db.Column(db.String(13))
-
+   
     checkOuts = db.relationship('CheckOut', backref='borrower')
     check_in = db.relationship('CheckIn', backref='borrower')
 
@@ -74,6 +74,7 @@ class Book(db.Model):
     author = db.Column(db.String(50))
     genre = db.Column(db.String(50))
     branchLocation = db.Column(db.String(50))
+
 
     check_out = db.relationship('CheckOut', backref='borrowed_book')
     check_in = db.relationship('CheckIn', backref='borrowed_book')

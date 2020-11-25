@@ -8,7 +8,9 @@ template_dir = os.path.join(basePath, 'templates')
 
 app = Flask(__name__, template_folder=template_dir)
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Wing1[1[@127.0.0.1:3306/library'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Queens77@127.0.0.1:3306/library_db'
+
+
 
 db = SQLAlchemy(app)
 
