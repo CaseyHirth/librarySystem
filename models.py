@@ -2,14 +2,22 @@ from app import app, db, login_manager
 from flask_login import UserMixin
 from datetime import date, timedelta
 
-class Member(UserMixin, db.Model):
+class User(UserMixin, db.Model):
+
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(80))
+    role = db.Column(db.String(30))
+
+class Member(db.Model):
 
     __tablename__ = 'members'
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True)
     email=db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(80))
     firstName = db.Column(db.String(50))
     lastName = db.Column(db.String(50))
     memberSince = db.Column(db.DateTime, default=date.today())
@@ -25,7 +33,7 @@ class Member(UserMixin, db.Model):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return Member.query.get(int(user_id))
+    return User.query.get(int(user_id))
 
 
 class Employees(db.Model):
@@ -34,7 +42,6 @@ class Employees(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     email=db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(80))
     firstName = db.Column(db.String(50))
     lastName = db.Column(db.String(50))
     job_id = db.Column('job_id', db.Integer, db.ForeignKey('jobs.id'))
